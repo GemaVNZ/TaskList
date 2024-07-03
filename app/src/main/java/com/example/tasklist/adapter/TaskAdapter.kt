@@ -7,12 +7,11 @@ import com.example.tasklist.data.Task
 import com.example.tasklist.databinding.ItemTaskBinding
 
 class TaskAdapter (private var dataSet : List<Task> = emptyList(),
-                   private val onItemClickListener:(Int) -> Unit):
-
+                   private val onItemClickListener:(Int) -> Unit) :
     RecyclerView.Adapter<TaskViewHolder>()  {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-            val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context))
+            val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return TaskViewHolder(binding)
         }
 
@@ -25,8 +24,8 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
             }
         }
 
-        fun updateData(dataSet: List<Task> ) {
-            this.dataSet = dataSet
+        fun updateData(newData: List<Task> ) {
+            dataSet = newData
             notifyDataSetChanged()
         }
 
@@ -39,6 +38,5 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
             binding.nameTextView.text = task.name
 
         }
-
 
     }
