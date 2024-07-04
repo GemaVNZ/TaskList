@@ -29,7 +29,18 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
         fun updateData(newData: List<Task> ) {
             dataSet = newData
             notifyDataSetChanged()
+
         }
+        fun removeItem(position: Int) {
+            val mutableList = dataSet.toMutableList()
+            mutableList.removeAt(position)
+            dataSet = mutableList
+            notifyItemRemoved(position)
+    }
+
+        fun getItem(position: Int): Task {
+            return dataSet[position]
+    }
 
     override fun onItemDismiss(position: Int) {
         onDeleteSwipe(position)
@@ -42,6 +53,11 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
                           onDeleteSwipe: (Int) -> Unit // Pasar como parámetro
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
+            binding.root.setOnClickListener {
+                onItemClick(adapterPosition)
+
+            }
+
             binding.root.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_DOWN) {
                     onItemClick(adapterPosition)

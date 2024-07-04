@@ -12,16 +12,21 @@ class TaskDAO (context: Context) {
 
     private val databaseManager: DatabaseManager = DatabaseManager(context)
 
-    //Función para insertar los datos
-    fun insert(task: Task) {
+    //Función pa
+    // ra insertar los datos
+    fun insert(task: Task) : Long {
         val db = databaseManager.writableDatabase
 
         val values = ContentValues()
         values.put(Task.COLUMN_NAME_TITLE, task.name)
-        values.put(Task.COLUMN_NAME_DONE, task.done)
+        values.put(Task.COLUMN_NAME_DONE, if (task.done) 1 else 0)
+        values.put(Task.COLUMN_NAME_ARCHIVED_TASK, if (task.archived) 1 else 0)
 
-        val newRowId = db.insert(Task.TABLE_NAME, null, values)
-        task.id = newRowId.toInt()
+        return db.insert(Task.TABLE_NAME, null, values)
+
+        //val newRowId = db.insert(Task.TABLE_NAME, null, values)
+        //task.id = newRowId.toInt()
+
     }
 
     //Función para actualizarlo los datos
@@ -103,5 +108,77 @@ class TaskDAO (context: Context) {
         cursor.close()
         db.close()
         return tasks
+    }
+
+    fun getActiveTasks(): List<Task> {
+        val db = databaseManager.readableDatabase
+        val cursor = db.query(
+            Task.TABLE_NAME,
+            null,
+            "${Task.COLUMN_NAME_ARCHIVED_TASK} = ?",
+            arrayOf("0"),
+            null,
+            null,
+            null
+        )
+
+        val tasks = mutableListOf<Task>()
+        with(cursor) {
+            while (moveToNext()) {
+                val task = Task(
+                    id = getInt(getColumnIndexOrThrow(android.provider.BaseColumns._ID)),
+                    name = getString(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_TITLE)),
+                    done = getInt(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_DONE)) == 1,
+                    archived = getInt(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_ARCHIVED_TASK)) == 1
+                )
+                tasks.add(task)
+            }
+        }
+        cursor.close()
+        return tasks
+    }
+
+    fun getArchivedTasks(): List<Task> {
+        val db = databaseManager.readableDatabase
+        val cursor = db.query(
+            Task.TABLE_NAME,
+            null,
+            "${Task.COLUMN_NAME_ARCHIVED_TASK} = ?",
+            arrayOf("1"),
+            null,
+            null,
+            null
+        )
+
+        val tasks = mutableListOf<Task>()
+        with(cursor) {
+            while (moveToNext()) {
+                val task = Task(
+                    id = getInt(getColumnIndexOrThrow(android.provider.BaseColumns._ID)),
+                    name = getString(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_TITLE)),
+                    done = getInt(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_DONE)) == 1,
+                    archived = getInt(getColumnIndexOrThrow(com.example.tasklist.data.Task.COLUMN_NAME_ARCHIVED_TASK)) == 1
+                )
+                tasks.add(task)
+            }
+        }
+        cursor.close()
+        return tasks
+    }
+
+    fun updateTask(task: Task) {
+            val db = databaseManager.writableDatabase
+            val values = ContentValues().apply {
+            put(Task.COLUMN_NAME_TITLE, task.name)
+            put(Task.COLUMN_NAME_DONE, if (task.done) 1 else 0)
+            put(Task.COLUMN_NAME_ARCHIVED_TASK, if (task.archived) 1 else 0)
+        }
+
+        db.update(Task.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(task.id.toString()))
+    }
+
+        fun deleteTask(task: Task) {
+            val db = databaseManager.writableDatabase
+            db.delete(Task.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(task.id.toString()))
     }
 }
