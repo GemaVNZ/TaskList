@@ -1,13 +1,11 @@
 package com.example.tasklist.activities
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.tasklist.R
 import com.example.tasklist.data.Task
 import com.example.tasklist.data.TaskDAO
 import com.example.tasklist.databinding.ActivityDetailBinding

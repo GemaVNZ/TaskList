@@ -1,12 +1,9 @@
 package com.example.tasklist.activities
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tasklist.R
 import com.example.tasklist.adapter.TaskAdapter
 import com.example.tasklist.data.TaskDAO
 import com.example.tasklist.databinding.ActivityArchivedTaskBinding

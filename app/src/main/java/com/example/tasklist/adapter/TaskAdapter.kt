@@ -1,7 +1,6 @@
 package com.example.tasklist.adapter
 
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasklist.data.Task

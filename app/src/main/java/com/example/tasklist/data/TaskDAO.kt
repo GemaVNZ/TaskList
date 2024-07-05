@@ -116,7 +116,7 @@ class TaskDAO (context: Context) {
             null                                    // The sort order
         )
 
-        var tasks = mutableListOf<Task>()
+        val tasks = mutableListOf<Task>()
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_NAME_TITLE))
