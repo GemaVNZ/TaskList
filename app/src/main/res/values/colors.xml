@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="color_icon">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="azul_primaryColor">#405D72</color>
+    <color name="gris_secondaryColor">#758694</color>
+    <color name="color_tarea">#F7E7DC</color>
+    <color name="color_back">#FFF8F3</color>
 
 
 

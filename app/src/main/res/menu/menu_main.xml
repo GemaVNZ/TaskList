@@ -7,6 +7,7 @@
         android:icon="@drawable/ic_archive"
         android:title="@string/ic_archivar"
         android:orderInCategory="100"
+        app:iconTint="@color/white"
         app:showAsAction="always" />
 
 </menu>
