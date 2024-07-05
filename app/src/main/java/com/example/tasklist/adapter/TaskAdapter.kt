@@ -42,11 +42,15 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
             return dataSet[position]
     }
 
+
     override fun onItemDismiss(position: Int) {
         onDeleteSwipe(position)
     }
 
-
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        // Implementar lógica de movimiento si es necesario
+        return false
+    }
 
     class TaskViewHolder (private val binding: ItemTaskBinding,
                           onItemClick: (Int) -> Unit, // Pasar como parámetro
@@ -58,21 +62,23 @@ class TaskAdapter (private var dataSet : List<Task> = emptyList(),
 
             }
 
-            binding.root.setOnTouchListener { _, event ->
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    onItemClick(adapterPosition)
-                }
-                false
-            }
         }
 
         fun bind(task: Task) {
             binding.nameTextView.text = task.name
         }
+
     }
 }        //Método para pintar la vista
         //fun render (task : Task) {
             //binding.nameTextView.text = task.name
+
+/*binding.root.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    onItemClick(adapterPosition)
+                }
+                false
+            }*/
 
 
 

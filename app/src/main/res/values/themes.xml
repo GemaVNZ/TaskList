@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.TaskList" parent="Theme.MaterialComponents.DayNight">
+    <style name="Base.Theme.TaskList" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary" type="color">@color/azul_primaryColor</item>
         <item name="colorPrimaryVariant" type="color">@color/gris_secondaryColor</item>
@@ -10,8 +10,6 @@
         <item name="colorSecondary" type="color">@color/color_back</item>
         <item name="colorSecondaryVariant" type="color">@color/color_icon</item>
         <item name="colorOnSecondary" type="color">@color/color_icon</item>
-
-
 
     </style>
 

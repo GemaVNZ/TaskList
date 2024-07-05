@@ -13,17 +13,25 @@
         android:orientation="vertical"
         tools:context=".activities.DetailActivity">
 
-        <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="250dp"
+        <!-- Añadimos el TextInputLayout aquí -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nametextField"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
             android:hint="¿Qué tienes que hacer?"
-            android:imeOptions="actionDone"
-            android:inputType="text" />
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-
+            <!-- Agregamos el TextInputEditText dentro del TextInputLayout -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameEditText"
+                android:layout_width="377dp"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 

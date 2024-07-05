@@ -3,6 +3,7 @@ package com.example.tasklist.activities
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasklist.R
@@ -25,6 +26,9 @@ class ArchivedTaskActivity : AppCompatActivity() {
         binding = ActivityArchivedTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+
         dbHelper = DatabaseManager(this)
         taskDAO = TaskDAO(this)
 
@@ -35,10 +39,10 @@ class ArchivedTaskActivity : AppCompatActivity() {
             onItemClick = { position -> /* Manejar clic en item */ },
             onDeleteSwipe = { position ->
                 val task = taskAdapter.getItem(position)
-                taskDAO.delete(task)
+                taskDAO.deleteTask(task)
                 taskAdapter.removeItem(position)
             }
-            )
+        )
 
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(this@ArchivedTaskActivity)
@@ -53,4 +57,6 @@ class ArchivedTaskActivity : AppCompatActivity() {
             val tasks = taskDAO.getArchivedTasks()
             taskAdapter.updateData(tasks)
     }
+
+
     }

@@ -12,8 +12,8 @@ class TaskDAO (context: Context) {
 
     private val databaseManager: DatabaseManager = DatabaseManager(context)
 
-    //Función pa
-    // ra insertar los datos
+    //Función para insertar los datos
+
     fun insert(task: Task) : Long {
         val db = databaseManager.writableDatabase
 
@@ -37,7 +37,7 @@ class TaskDAO (context: Context) {
         values.put(Task.COLUMN_NAME_TITLE, task.name)
         values.put(Task.COLUMN_NAME_DONE, task.done)
 
-        val updatedRows = db.update(
+        db.update(
             Task.TABLE_NAME,
             values,
             "${BaseColumns._ID} = ${task.id}",
@@ -47,10 +47,29 @@ class TaskDAO (context: Context) {
 
 
     //Función para borrar los datos
-    fun delete(task: Task) {
+
+    fun deleteTask(task: Task) {
         val db = databaseManager.writableDatabase
 
-        val deletedRows = db.delete(Task.TABLE_NAME, "${BaseColumns._ID} = ${task.id}", null)
+        // Si la tarea está archivada, la eliminamos definitivamente de la base de datos
+        if (task.archived) {
+            db.delete(
+                Task.TABLE_NAME,
+                "${BaseColumns._ID} = ?",
+                arrayOf(task.id.toString())
+            )
+        } else {
+            // Si no está archivada, la marcamos como archivada (como antes)
+            val values = ContentValues().apply {
+                put(Task.COLUMN_NAME_ARCHIVED_TASK, 1) // Marcar como archivada
+            }
+            db.update(
+                Task.TABLE_NAME,
+                values,
+                "${BaseColumns._ID} = ?",
+                arrayOf(task.id.toString())
+            )
+        }
     }
 
     //Función para leer los datos de una columna
@@ -177,8 +196,15 @@ class TaskDAO (context: Context) {
         db.update(Task.TABLE_NAME, values, "${BaseColumns._ID} = ?", arrayOf(task.id.toString()))
     }
 
+
+    /*fun delete(task: Task) {
+       val db = databaseManager.writableDatabase
+
+       val deletedRows = db.delete(Task.TABLE_NAME, "${BaseColumns._ID} = ${task.id}", null)
+   }
+
         fun deleteTask(task: Task) {
             val db = databaseManager.writableDatabase
             db.delete(Task.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(task.id.toString()))
-    }
+    }*/
 }

@@ -1,5 +1,7 @@
 package com.example.tasklist.activities
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tasklist.R
 import com.example.tasklist.adapter.SwipeToDeleteCallback
 import com.example.tasklist.adapter.TaskAdapter
@@ -29,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var taskDAO: TaskDAO
 
-    private lateinit var addTaskLauncher: ActivityResultLauncher<Intent>
+    //private lateinit var addTaskLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var dbHelper : DatabaseManager
 
@@ -44,49 +47,26 @@ class MainActivity : AppCompatActivity() {
         taskDAO = TaskDAO(this)
         taskList = mutableListOf()
 
-
-        /*addTaskLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result ->
-            if (result.resultCode == RESULT_OK) {
-                //Recuperar la tarea desde el Detail Activity
-                val data = result.data
-                val taskName = data?.getStringExtra("taskName") ?: return@registerForActivityResult
-                val newTask = Task(-1, taskName) // -1 because the ID will be generated automatically
-
-                try {
-                // Guardar la nueva tarea en la base de datos
-                val taskId = taskDAO.insert(newTask)
-
-                // Actualizar la lista de tareas desde la base de datos
-                taskList.clear()
-                taskList.addAll(taskDAO.findAll())
-                adapter.updateData(taskList)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error al insertar tarea: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-        }*/
-
-        //Función para actualizar el adapter. Además se puede clickar en él.
-        /*adapter = TaskAdapter(taskList) {
-            val task = taskList[it]
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("TASK_ID", task.id)
-            startActivity(intent) }
-            */
-
         adapter = TaskAdapter(
             taskList,
             onItemClick = { position ->
-                Toast.makeText(this, "Click en tarea: ${taskList[position].name}", Toast.LENGTH_SHORT).show()
+                val task = taskList[position]
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("TASK_ID", task.id)
+                startActivity(intent)
+                //Toast.makeText(this, "Click en tarea: ${taskList[position].name}", Toast.LENGTH_SHORT).show()
             },
             onDeleteSwipe = { position ->
                 val task = adapter.getItem(position)
-                task.archived = true
-                taskDAO.updateTask(task)
+                if (showArchivedTasks) {
+                    taskDAO.deleteTask(task) // Eliminar tarea definitivamente
+                    Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show()
+                } else {
+                    task.archived = true
+                    taskDAO.updateTask(task) // Archivar tarea
+                }
                 adapter.removeItem(position)
-                Toast.makeText(this, "Tarea eliminada", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Tarea archivada", Toast.LENGTH_SHORT).show()
                 updateTaskList()
             })
 
@@ -128,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    //Función para hacer la flecha de retroceso del menú
+    //Función para hacer la flecha de retroceso del menú y añadir el icono de archivar
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
                 R.id.action_trash -> {
@@ -148,6 +128,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    //Función para mostrar tareas archivadas
     private fun getTasksToShow(): List<Task> {
         return if (showArchivedTasks) {
             taskDAO.getArchivedTasks()
@@ -155,6 +136,39 @@ class MainActivity : AppCompatActivity() {
             taskDAO.getActiveTasks()
         }
     }
+
+
+    /*addTaskLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+{ result ->
+    if (result.resultCode == RESULT_OK) {
+        //Recuperar la tarea desde el Detail Activity
+        val data = result.data
+        val taskName = data?.getStringExtra("taskName") ?: return@registerForActivityResult
+        val newTask = Task(-1, taskName) // -1 because the ID will be generated automatically
+
+        try {
+        // Guardar la nueva tarea en la base de datos
+        val taskId = taskDAO.insert(newTask)
+
+        // Actualizar la lista de tareas desde la base de datos
+        taskList.clear()
+        taskList.addAll(taskDAO.findAll())
+        adapter.updateData(taskList)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error al insertar tarea: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+}*/
+
+    //Función para actualizar el adapter. Además se puede clickar en él.
+    /*adapter = TaskAdapter(taskList) {
+        val task = taskList[it]
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("TASK_ID", task.id)
+        startActivity(intent) }
+        */
+
 }
 
 
