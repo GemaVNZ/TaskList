@@ -23,9 +23,6 @@ class ArchivedTaskActivity : AppCompatActivity() {
         binding = ActivityArchivedTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
-
         dbHelper = DatabaseManager(this)
         taskDAO = TaskDAO(this)
 
